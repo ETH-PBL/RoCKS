@@ -1,0 +1,14 @@
+services:
+  vitis:
+    image: xilinx-vitis-v2025.2:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HOST_TOOL_ARCHIVE_NAME: ./FPGAs_AdaptiveSoCs_Unified_SDI_2025.2.1_0320_0604
+        INSTALL_TARGET_DIR: /opt/Xilinx
+        UBUNTU_VERSION: 24.04
+        USERNAME: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+        PASSWORD: "password"

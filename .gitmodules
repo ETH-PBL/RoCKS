@@ -1,0 +1,9 @@
+[submodule "meta-rocks/ProgrammableLogic/verilog-ethernet/verilog-ethernet"]
+	path = meta-rocks/ProgrammableLogic/verilog-ethernet/verilog-ethernet
+	url = https://github.com/vmayoral/verilog-ethernet
+[submodule "meta-rocks/ProgrammableLogic/rdma_block_ip/fpga-network-stack"]
+	path = meta-rocks/ProgrammableLogic/rdma_block_ip/fpga-network-stack
+	url = https://github.com/fpgasystems/fpga-network-stack
+[submodule "meta-rocks/ProgrammableLogic/verilog-ethernet-axis-half-switch"]
+	path = meta-rocks/ProgrammableLogic/verilog-ethernet-axis-half-switch
+	url = https://github.com/fimtrey/verilog-ethernet-axis-half-switch.git

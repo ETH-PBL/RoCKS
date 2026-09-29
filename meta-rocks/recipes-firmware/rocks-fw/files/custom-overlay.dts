@@ -1,0 +1,23 @@
+#include "pl.dtsi"
+
+&axi_dma_0 {
+    compatible = "xlnx,eth-dma";
+    xlnx,include-dre;
+    xlnx,num-queues = /bits/ 16 <0x1>;
+    /delete-property/ xlnx,include-sg;
+    /delete-node/ dma-channel@80000000;
+    /delete-node/ dma-channel@80000030;
+};
+
+/delete-node/ &network_stack_0;
+
+&amba {
+    xxv_ethernet_0: ethernet@80010000 {
+        compatible = "xlnx,xxv-ethernet-1.0";
+
+        local-mac-address = [ 00 0a 23 00 00 00 ];
+        
+        axistream-connected = <&axi_dma_0>;
+        /* Omit axistream-control-connected if you aren't using the Control Stream */
+    };
+};

@@ -1,0 +1,16 @@
+services:
+  yocto:
+    image: yocto:latest
+    network_mode: host
+    ipc: host
+    volumes:
+      # GUI pass-through
+      - /home/${USER}/.Xauthority:/home/${USER}/.Xauthority:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # mount work directory
+      - .:/home/${USER}/work:rw
+    working_dir: /home/${USER}/work
+    environment:
+      - DISPLAY=$DISPLAY
+      - XDG_RUNTIME_DIR=/tmp/.X11-unix
+    restart: no

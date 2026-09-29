@@ -1,0 +1,2140 @@
+From 5605f9fa984b9ee23c2a96b970da3e7b2c82b1a9 Mon Sep 17 00:00:00 2001
+From: Michael Jost <michael.jost@pbl.ee.ethz.ch>
+Date: Mon, 1 Jun 2026 08:18:08 +0200
+Subject: [PATCH 1/4] v2025.2 migration
+
+---
+ hls/arp_server_subnet/CMakeLists.txt          |  9 +++-
+ hls/arp_server_subnet/csim.tcl.in             | 21 ++++++++++
+ hls/arp_server_subnet/ip.tcl.in               | 21 ++++++++++
+ hls/arp_server_subnet/make.tcl.in             | 37 -----------------
+ hls/arp_server_subnet/services.tcl.in         | 23 +++++++++++
+ hls/arp_server_subnet/synthesis.tcl.in        | 21 ++++++++++
+ hls/ethernet_frame_padding_512/CMakeLists.txt |  9 +++-
+ hls/ethernet_frame_padding_512/csim.tcl.in    | 20 +++++++++
+ hls/ethernet_frame_padding_512/ip.tcl.in      | 20 +++++++++
+ hls/ethernet_frame_padding_512/make.tcl.in    | 36 ----------------
+ .../services.tcl.in                           | 22 ++++++++++
+ .../synthesis.tcl.in                          | 20 +++++++++
+ hls/hash_table/CMakeLists.txt                 |  9 +++-
+ hls/hash_table/csim.tcl.in                    | 19 +++++++++
+ hls/hash_table/ip.tcl.in                      | 19 +++++++++
+ hls/hash_table/make.tcl.in                    | 35 ----------------
+ hls/hash_table/services.tcl.in                | 21 ++++++++++
+ hls/hash_table/synthesis.tcl.in               | 19 +++++++++
+ hls/icmp_server/CMakeLists.txt                |  9 +++-
+ hls/icmp_server/csim.tcl.in                   | 19 +++++++++
+ hls/icmp_server/ip.tcl.in                     | 19 +++++++++
+ hls/icmp_server/make.tcl.in                   | 35 ----------------
+ hls/icmp_server/services.tcl.in               | 21 ++++++++++
+ hls/icmp_server/synthesis.tcl.in              | 19 +++++++++
+ hls/ip_handler/CMakeLists.txt                 |  9 +++-
+ hls/ip_handler/csim.tcl.in                    | 23 +++++++++++
+ hls/ip_handler/ip.tcl.in                      | 23 +++++++++++
+ hls/ip_handler/make.tcl.in                    | 39 ------------------
+ hls/ip_handler/services.tcl.in                | 25 +++++++++++
+ hls/ip_handler/synthesis.tcl.in               | 23 +++++++++++
+ hls/ipv4/CMakeLists.txt                       |  9 +++-
+ hls/ipv4/csim.tcl.in                          | 21 ++++++++++
+ hls/ipv4/ip.tcl.in                            | 21 ++++++++++
+ hls/ipv4/make.tcl.in                          | 37 -----------------
+ hls/ipv4/services.tcl.in                      | 23 +++++++++++
+ hls/ipv4/synthesis.tcl.in                     | 21 ++++++++++
+ hls/ipv6/CMakeLists.txt                       |  9 +++-
+ hls/ipv6/csim.tcl.in                          | 23 +++++++++++
+ hls/ipv6/ip.tcl.in                            | 23 +++++++++++
+ hls/ipv6/make.tcl.in                          | 39 ------------------
+ hls/ipv6/services.tcl.in                      | 26 ++++++++++++
+ hls/ipv6/synthesis.tcl.in                     | 24 +++++++++++
+ hls/mac_ip_encode/CMakeLists.txt              |  9 +++-
+ hls/mac_ip_encode/csim.tcl.in                 | 21 ++++++++++
+ hls/mac_ip_encode/ip.tcl.in                   | 21 ++++++++++
+ hls/mac_ip_encode/make.tcl.in                 | 37 -----------------
+ hls/mac_ip_encode/services.tcl.in             | 24 +++++++++++
+ hls/mac_ip_encode/synthesis.tcl.in            | 22 ++++++++++
+ hls/rocev2/CMakeLists.txt                     |  9 +++-
+ hls/rocev2/{make.tcl.in => csim.tcl.in}       | 24 ++---------
+ hls/rocev2/ip.tcl.in                          | 31 ++++++++++++++
+ hls/rocev2/services.tcl.in                    | 33 +++++++++++++++
+ hls/rocev2/synthesis.tcl.in                   | 31 ++++++++++++++
+ hls/toe/CMakeLists.txt                        |  9 +++-
+ hls/toe/csim.tcl.in                           | 39 ++++++++++++++++++
+ hls/toe/{make.tcl.in => ip.tcl.in}            | 19 +--------
+ hls/toe/services.tcl.in                       | 41 +++++++++++++++++++
+ hls/toe/synthesis.tcl.in                      | 39 ++++++++++++++++++
+ hls/udp/CMakeLists.txt                        |  9 +++-
+ hls/udp/csim.tcl.in                           | 21 ++++++++++
+ hls/udp/ip.tcl.in                             | 21 ++++++++++
+ hls/udp/make.tcl.in                           | 37 -----------------
+ hls/udp/services.tcl.in                       | 23 +++++++++++
+ hls/udp/synthesis.tcl.in                      | 21 ++++++++++
+ 64 files changed, 1070 insertions(+), 392 deletions(-)
+ create mode 100644 hls/arp_server_subnet/csim.tcl.in
+ create mode 100644 hls/arp_server_subnet/ip.tcl.in
+ delete mode 100644 hls/arp_server_subnet/make.tcl.in
+ create mode 100644 hls/arp_server_subnet/services.tcl.in
+ create mode 100644 hls/arp_server_subnet/synthesis.tcl.in
+ create mode 100644 hls/ethernet_frame_padding_512/csim.tcl.in
+ create mode 100644 hls/ethernet_frame_padding_512/ip.tcl.in
+ delete mode 100644 hls/ethernet_frame_padding_512/make.tcl.in
+ create mode 100644 hls/ethernet_frame_padding_512/services.tcl.in
+ create mode 100644 hls/ethernet_frame_padding_512/synthesis.tcl.in
+ create mode 100644 hls/hash_table/csim.tcl.in
+ create mode 100644 hls/hash_table/ip.tcl.in
+ delete mode 100644 hls/hash_table/make.tcl.in
+ create mode 100644 hls/hash_table/services.tcl.in
+ create mode 100644 hls/hash_table/synthesis.tcl.in
+ create mode 100644 hls/icmp_server/csim.tcl.in
+ create mode 100644 hls/icmp_server/ip.tcl.in
+ delete mode 100644 hls/icmp_server/make.tcl.in
+ create mode 100644 hls/icmp_server/services.tcl.in
+ create mode 100644 hls/icmp_server/synthesis.tcl.in
+ create mode 100644 hls/ip_handler/csim.tcl.in
+ create mode 100644 hls/ip_handler/ip.tcl.in
+ delete mode 100644 hls/ip_handler/make.tcl.in
+ create mode 100644 hls/ip_handler/services.tcl.in
+ create mode 100644 hls/ip_handler/synthesis.tcl.in
+ create mode 100644 hls/ipv4/csim.tcl.in
+ create mode 100644 hls/ipv4/ip.tcl.in
+ delete mode 100644 hls/ipv4/make.tcl.in
+ create mode 100644 hls/ipv4/services.tcl.in
+ create mode 100644 hls/ipv4/synthesis.tcl.in
+ create mode 100644 hls/ipv6/csim.tcl.in
+ create mode 100644 hls/ipv6/ip.tcl.in
+ delete mode 100644 hls/ipv6/make.tcl.in
+ create mode 100644 hls/ipv6/services.tcl.in
+ create mode 100644 hls/ipv6/synthesis.tcl.in
+ create mode 100644 hls/mac_ip_encode/csim.tcl.in
+ create mode 100644 hls/mac_ip_encode/ip.tcl.in
+ delete mode 100644 hls/mac_ip_encode/make.tcl.in
+ create mode 100644 hls/mac_ip_encode/services.tcl.in
+ create mode 100644 hls/mac_ip_encode/synthesis.tcl.in
+ rename hls/rocev2/{make.tcl.in => csim.tcl.in} (57%)
+ create mode 100644 hls/rocev2/ip.tcl.in
+ create mode 100644 hls/rocev2/services.tcl.in
+ create mode 100644 hls/rocev2/synthesis.tcl.in
+ create mode 100644 hls/toe/csim.tcl.in
+ rename hls/toe/{make.tcl.in => ip.tcl.in} (67%)
+ create mode 100644 hls/toe/services.tcl.in
+ create mode 100644 hls/toe/synthesis.tcl.in
+ create mode 100644 hls/udp/csim.tcl.in
+ create mode 100644 hls/udp/ip.tcl.in
+ delete mode 100644 hls/udp/make.tcl.in
+ create mode 100644 hls/udp/services.tcl.in
+ create mode 100644 hls/udp/synthesis.tcl.in
+
+diff --git a/hls/arp_server_subnet/CMakeLists.txt b/hls/arp_server_subnet/CMakeLists.txt
+index a1a495d..fa76ca9 100644
+--- a/hls/arp_server_subnet/CMakeLists.txt
++++ b/hls/arp_server_subnet/CMakeLists.txt
+@@ -38,8 +38,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet_config.hpp.in arp_server_subnet_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -57,7 +62,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/arp_server_subnet/csim.tcl.in b/hls/arp_server_subnet/csim.tcl.in
+new file mode 100644
+index 0000000..6d3f243
+--- /dev/null
++++ b/hls/arp_server_subnet/csim.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++
++csim_design -clean -argv {${CMAKE_CURRENT_SOURCE_DIR}/in.dat ${CMAKE_CURRENT_SOURCE_DIR}/out.dat}
++
++exit
+diff --git a/hls/arp_server_subnet/ip.tcl.in b/hls/arp_server_subnet/ip.tcl.in
+new file mode 100644
+index 0000000..a018683
+--- /dev/null
++++ b/hls/arp_server_subnet/ip.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++
++export_design -format ip_catalog -ipname "arp_server_subnet" -display_name "ARP Subnet Server" -description "Replies to ARP queries and resolves IP addresses." -vendor "ethz.systems.fpga" -version "1.1"
++
++exit
+diff --git a/hls/arp_server_subnet/make.tcl.in b/hls/arp_server_subnet/make.tcl.in
+deleted file mode 100644
+index 13d2c38..0000000
+--- a/hls/arp_server_subnet/make.tcl.in
++++ /dev/null
+@@ -1,37 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design -clean -argv {${CMAKE_CURRENT_SOURCE_DIR}/in.dat ${CMAKE_CURRENT_SOURCE_DIR}/out.dat}
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "arp_server_subnet" -display_name "ARP Subnet Server" -description "Replies to ARP queries and resolves IP addresses." -vendor "ethz.systems.fpga" -version "1.1"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/arp_server_subnet/services.tcl.in b/hls/arp_server_subnet/services.tcl.in
+new file mode 100644
+index 0000000..ac0e473
+--- /dev/null
++++ b/hls/arp_server_subnet/services.tcl.in
+@@ -0,0 +1,23 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/arp_server_subnet/synthesis.tcl.in b/hls/arp_server_subnet/synthesis.tcl.in
+new file mode 100644
+index 0000000..d955152
+--- /dev/null
++++ b/hls/arp_server_subnet/synthesis.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_arp_server_subnet.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++
++csynth_design
++
++exit
+diff --git a/hls/ethernet_frame_padding_512/CMakeLists.txt b/hls/ethernet_frame_padding_512/CMakeLists.txt
+index 4447c52..c12a3a0 100644
+--- a/hls/ethernet_frame_padding_512/CMakeLists.txt
++++ b/hls/ethernet_frame_padding_512/CMakeLists.txt
+@@ -39,7 +39,12 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -57,7 +62,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/ethernet_frame_padding_512/csim.tcl.in b/hls/ethernet_frame_padding_512/csim.tcl.in
+new file mode 100644
+index 0000000..6004de5
+--- /dev/null
++++ b/hls/ethernet_frame_padding_512/csim.tcl.in
+@@ -0,0 +1,20 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ethernet_frame_padding_512.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ethernet_frame_padding_512.cpp
++
++
++csim_design
++
++exit
+diff --git a/hls/ethernet_frame_padding_512/ip.tcl.in b/hls/ethernet_frame_padding_512/ip.tcl.in
+new file mode 100644
+index 0000000..1f4e3f5
+--- /dev/null
++++ b/hls/ethernet_frame_padding_512/ip.tcl.in
+@@ -0,0 +1,20 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ethernet_frame_padding_512.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ethernet_frame_padding_512.cpp
++
++
++export_design -format ip_catalog -display_name "Ethernet Frame Padding 512" -vendor "ethz.systems.fpga" -version "0.1"
++
++exit
+diff --git a/hls/ethernet_frame_padding_512/make.tcl.in b/hls/ethernet_frame_padding_512/make.tcl.in
+deleted file mode 100644
+index 4cc0d2e..0000000
+--- a/hls/ethernet_frame_padding_512/make.tcl.in
++++ /dev/null
+@@ -1,36 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}
+-
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/ethernet_frame_padding_512.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ethernet_frame_padding_512.cpp
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -display_name "Ethernet Frame Padding 512" -vendor "ethz.systems.fpga" -version "0.1"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/ethernet_frame_padding_512/services.tcl.in b/hls/ethernet_frame_padding_512/services.tcl.in
+new file mode 100644
+index 0000000..7276cfe
+--- /dev/null
++++ b/hls/ethernet_frame_padding_512/services.tcl.in
+@@ -0,0 +1,22 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ethernet_frame_padding_512.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ethernet_frame_padding_512.cpp
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/ethernet_frame_padding_512/synthesis.tcl.in b/hls/ethernet_frame_padding_512/synthesis.tcl.in
+new file mode 100644
+index 0000000..22b37b0
+--- /dev/null
++++ b/hls/ethernet_frame_padding_512/synthesis.tcl.in
+@@ -0,0 +1,20 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ethernet_frame_padding_512.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ethernet_frame_padding_512.cpp
++
++
++csynth_design
++
++exit
+diff --git a/hls/hash_table/CMakeLists.txt b/hls/hash_table/CMakeLists.txt
+index fcadc9f..bb15962 100644
+--- a/hls/hash_table/CMakeLists.txt
++++ b/hls/hash_table/CMakeLists.txt
+@@ -40,8 +40,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/hash_table_config.hpp.in hash_table_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -59,7 +64,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/hash_table/csim.tcl.in b/hls/hash_table/csim.tcl.in
+new file mode 100644
+index 0000000..ae20819
+--- /dev/null
++++ b/hls/hash_table/csim.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++csim_design
++
++exit
+diff --git a/hls/hash_table/ip.tcl.in b/hls/hash_table/ip.tcl.in
+new file mode 100644
+index 0000000..fb9158b
+--- /dev/null
++++ b/hls/hash_table/ip.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++export_design -format ip_catalog -ipname "hash_table" -display_name "Hash Table (cuckoo)" -description "" -vendor "ethz.systems.fpga" -version "1.0"
++
++exit
+diff --git a/hls/hash_table/make.tcl.in b/hls/hash_table/make.tcl.in
+deleted file mode 100644
+index 3644636..0000000
+--- a/hls/hash_table/make.tcl.in
++++ /dev/null
+@@ -1,35 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "hash_table" -display_name "Hash Table (cuckoo)" -description "" -vendor "ethz.systems.fpga" -version "1.0"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/hash_table/services.tcl.in b/hls/hash_table/services.tcl.in
+new file mode 100644
+index 0000000..a521619
+--- /dev/null
++++ b/hls/hash_table/services.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/hash_table/synthesis.tcl.in b/hls/hash_table/synthesis.tcl.in
+new file mode 100644
+index 0000000..27286f1
+--- /dev/null
++++ b/hls/hash_table/synthesis.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_hash_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++csynth_design
++
++exit
+diff --git a/hls/icmp_server/CMakeLists.txt b/hls/icmp_server/CMakeLists.txt
+index b21aad2..6a49ec1 100644
+--- a/hls/icmp_server/CMakeLists.txt
++++ b/hls/icmp_server/CMakeLists.txt
+@@ -40,8 +40,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/icmp_server_config.hpp.in icmp_server_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -59,7 +64,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/icmp_server/csim.tcl.in b/hls/icmp_server/csim.tcl.in
+new file mode 100644
+index 0000000..7e4c486
+--- /dev/null
++++ b/hls/icmp_server/csim.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/icmp_server.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb test_icmp_server.cpp
++
++
++csim_design
++
++exit
+diff --git a/hls/icmp_server/ip.tcl.in b/hls/icmp_server/ip.tcl.in
+new file mode 100644
+index 0000000..4cf6e19
+--- /dev/null
++++ b/hls/icmp_server/ip.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/icmp_server.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb test_icmp_server.cpp
++
++
++export_design -format ip_catalog -ipname "icmp_server" -display_name "ICMP Server" -vendor "xilinx.labs" -version "1.67"
++
++exit
+diff --git a/hls/icmp_server/make.tcl.in b/hls/icmp_server/make.tcl.in
+deleted file mode 100644
+index 33386ce..0000000
+--- a/hls/icmp_server/make.tcl.in
++++ /dev/null
+@@ -1,35 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/icmp_server.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-add_files -tb test_icmp_server.cpp
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "icmp_server" -display_name "ICMP Server" -vendor "xilinx.labs" -version "1.67"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/icmp_server/services.tcl.in b/hls/icmp_server/services.tcl.in
+new file mode 100644
+index 0000000..838b593
+--- /dev/null
++++ b/hls/icmp_server/services.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/icmp_server.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb test_icmp_server.cpp
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/icmp_server/synthesis.tcl.in b/hls/icmp_server/synthesis.tcl.in
+new file mode 100644
+index 0000000..a3ed106
+--- /dev/null
++++ b/hls/icmp_server/synthesis.tcl.in
+@@ -0,0 +1,19 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/icmp_server.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb test_icmp_server.cpp
++
++
++csynth_design
++
++exit
+diff --git a/hls/ip_handler/CMakeLists.txt b/hls/ip_handler/CMakeLists.txt
+index 892db67..78ec337 100644
+--- a/hls/ip_handler/CMakeLists.txt
++++ b/hls/ip_handler/CMakeLists.txt
+@@ -39,8 +39,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ip_handler_config.hpp.in ip_handler_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -60,7 +65,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/ip_handler/csim.tcl.in b/hls/ip_handler/csim.tcl.in
+new file mode 100644
+index 0000000..ad17572
+--- /dev/null
++++ b/hls/ip_handler/csim.tcl.in
+@@ -0,0 +1,23 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ip_handler.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ip_handler.cpp
++
++
++#config_rtl -disable_start_propagation
++
++
++csim_design -clean
++
++exit
+diff --git a/hls/ip_handler/ip.tcl.in b/hls/ip_handler/ip.tcl.in
+new file mode 100644
+index 0000000..47ad7e3
+--- /dev/null
++++ b/hls/ip_handler/ip.tcl.in
+@@ -0,0 +1,23 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ip_handler.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ip_handler.cpp
++
++
++#config_rtl -disable_start_propagation
++
++
++export_design -format ip_catalog -ipname "ip_handler" -display_name "IP Handler" -vendor "ethz.systems.fpga" -version "2.0"
++
++exit
+diff --git a/hls/ip_handler/make.tcl.in b/hls/ip_handler/make.tcl.in
+deleted file mode 100644
+index 037b5b1..0000000
+--- a/hls/ip_handler/make.tcl.in
++++ /dev/null
+@@ -1,39 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/ip_handler.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ip_handler.cpp
+-
+-
+-#config_rtl -disable_start_propagation
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design -clean
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "ip_handler" -display_name "IP Handler" -vendor "ethz.systems.fpga" -version "2.0"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/ip_handler/services.tcl.in b/hls/ip_handler/services.tcl.in
+new file mode 100644
+index 0000000..3290aa6
+--- /dev/null
++++ b/hls/ip_handler/services.tcl.in
+@@ -0,0 +1,25 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ip_handler.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ip_handler.cpp
++
++
++#config_rtl -disable_start_propagation
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/ip_handler/synthesis.tcl.in b/hls/ip_handler/synthesis.tcl.in
+new file mode 100644
+index 0000000..a1ea8c3
+--- /dev/null
++++ b/hls/ip_handler/synthesis.tcl.in
+@@ -0,0 +1,23 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ip_handler.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ip_handler.cpp
++
++
++#config_rtl -disable_start_propagation
++
++
++csynth_design
++
++exit
+diff --git a/hls/ipv4/CMakeLists.txt b/hls/ipv4/CMakeLists.txt
+index 0586600..8957eb7 100644
+--- a/hls/ipv4/CMakeLists.txt
++++ b/hls/ipv4/CMakeLists.txt
+@@ -39,8 +39,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ipv4_config.hpp.in ipv4_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -59,7 +64,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/ipv4/csim.tcl.in b/hls/ipv4/csim.tcl.in
+new file mode 100644
+index 0000000..4528403
+--- /dev/null
++++ b/hls/ipv4/csim.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv4.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv4.cpp
++
++
++csim_design
++
++exit
+diff --git a/hls/ipv4/ip.tcl.in b/hls/ipv4/ip.tcl.in
+new file mode 100644
+index 0000000..2f17f45
+--- /dev/null
++++ b/hls/ipv4/ip.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv4.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv4.cpp
++
++
++export_design -format ip_catalog -ipname "ipv4" -display_name "IPv4" -description "" -vendor "ethz.systems.fpga" -version "0.1"
++
++exit
+diff --git a/hls/ipv4/make.tcl.in b/hls/ipv4/make.tcl.in
+deleted file mode 100644
+index f944962..0000000
+--- a/hls/ipv4/make.tcl.in
++++ /dev/null
+@@ -1,37 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
+-#add_files ${CMAKE_SOURCE_DIR}/ipv4.hpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv4.cpp
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "ipv4" -display_name "IPv4" -description "" -vendor "ethz.systems.fpga" -version "0.1"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/ipv4/services.tcl.in b/hls/ipv4/services.tcl.in
+new file mode 100644
+index 0000000..9862979
+--- /dev/null
++++ b/hls/ipv4/services.tcl.in
+@@ -0,0 +1,23 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv4.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv4.cpp
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/ipv4/synthesis.tcl.in b/hls/ipv4/synthesis.tcl.in
+new file mode 100644
+index 0000000..693ffa4
+--- /dev/null
++++ b/hls/ipv4/synthesis.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv4.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv4.cpp
++
++
++csynth_design
++
++exit
+diff --git a/hls/ipv6/CMakeLists.txt b/hls/ipv6/CMakeLists.txt
+index 88de843..e80a6c4 100644
+--- a/hls/ipv6/CMakeLists.txt
++++ b/hls/ipv6/CMakeLists.txt
+@@ -32,8 +32,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ipv6_config.hpp.in ipv6_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -52,7 +57,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/ipv6/csim.tcl.in b/hls/ipv6/csim.tcl.in
+new file mode 100644
+index 0000000..9eec7ac
+--- /dev/null
++++ b/hls/ipv6/csim.tcl.in
+@@ -0,0 +1,23 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv6.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv6.cpp
++
++
++config_rtl -disable_start_propagation
++
++csim_design
++
++exit
+diff --git a/hls/ipv6/ip.tcl.in b/hls/ipv6/ip.tcl.in
+new file mode 100644
+index 0000000..702b487
+--- /dev/null
++++ b/hls/ipv6/ip.tcl.in
+@@ -0,0 +1,23 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv6.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv6.cpp
++
++
++config_rtl -disable_start_propagation
++
++export_design -format ip_catalog -ipname "ipv6" -display_name "IPv6" -description "" -vendor "ethz.systems.fpga" -version "0.1"
++
++exit
+diff --git a/hls/ipv6/make.tcl.in b/hls/ipv6/make.tcl.in
+deleted file mode 100644
+index 098a0fa..0000000
+--- a/hls/ipv6/make.tcl.in
++++ /dev/null
+@@ -1,39 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
+-#add_files ${CMAKE_SOURCE_DIR}/ipv6.hpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv6.cpp
+-
+-
+-config_rtl -disable_start_propagation
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "ipv6" -display_name "IPv6" -description "" -vendor "ethz.systems.fpga" -version "0.1"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/ipv6/services.tcl.in b/hls/ipv6/services.tcl.in
+new file mode 100644
+index 0000000..3a2d44c
+--- /dev/null
++++ b/hls/ipv6/services.tcl.in
+@@ -0,0 +1,26 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv6.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv6.cpp
++
++
++config_rtl -disable_start_propagation
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/ipv6/synthesis.tcl.in b/hls/ipv6/synthesis.tcl.in
+new file mode 100644
+index 0000000..f1477c8
+--- /dev/null
++++ b/hls/ipv6/synthesis.tcl.in
+@@ -0,0 +1,24 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_SOURCE_DIR}/ipv6.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ipv6.cpp
++
++
++config_rtl -disable_start_propagation
++
++
++csynth_design
++
++exit
+diff --git a/hls/mac_ip_encode/CMakeLists.txt b/hls/mac_ip_encode/CMakeLists.txt
+index 9d2e251..00eddcb 100644
+--- a/hls/mac_ip_encode/CMakeLists.txt
++++ b/hls/mac_ip_encode/CMakeLists.txt
+@@ -39,8 +39,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode_config.hpp.in mac_ip_encode_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -60,7 +65,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/mac_ip_encode/csim.tcl.in b/hls/mac_ip_encode/csim.tcl.in
+new file mode 100644
+index 0000000..2986b01
+--- /dev/null
++++ b/hls/mac_ip_encode/csim.tcl.in
+@@ -0,0 +1,21 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_mac_ip_encode.cpp
++
++
++
++csynth_design
++
++exit
+diff --git a/hls/mac_ip_encode/ip.tcl.in b/hls/mac_ip_encode/ip.tcl.in
+new file mode 100644
+index 0000000..8427807
+--- /dev/null
++++ b/hls/mac_ip_encode/ip.tcl.in
+@@ -0,0 +1,21 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_mac_ip_encode.cpp
++
++
++
++export_design -format ip_catalog -ipname "mac_ip_encode" -display_name "MAC IP Encoder" -vendor "ethz.systems.fpga" -version "2.0"
++
++exit
+diff --git a/hls/mac_ip_encode/make.tcl.in b/hls/mac_ip_encode/make.tcl.in
+deleted file mode 100644
+index 9c36113..0000000
+--- a/hls/mac_ip_encode/make.tcl.in
++++ /dev/null
+@@ -1,37 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_mac_ip_encode.cpp
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design -argv {${CMAKE_CURRENT_SOURCE_DIR}/in.dat ${CMAKE_CURRENT_SOURCE_DIR}/tcp.out}
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "mac_ip_encode" -display_name "MAC IP Encoder" -vendor "ethz.systems.fpga" -version "2.0"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/mac_ip_encode/services.tcl.in b/hls/mac_ip_encode/services.tcl.in
+new file mode 100644
+index 0000000..8c44694
+--- /dev/null
++++ b/hls/mac_ip_encode/services.tcl.in
+@@ -0,0 +1,24 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_mac_ip_encode.cpp
++
++
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/mac_ip_encode/synthesis.tcl.in b/hls/mac_ip_encode/synthesis.tcl.in
+new file mode 100644
+index 0000000..12bc275
+--- /dev/null
++++ b/hls/mac_ip_encode/synthesis.tcl.in
+@@ -0,0 +1,22 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/mac_ip_encode.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_mac_ip_encode.cpp
++
++
++
++
++csynth_design
++
++exit
+diff --git a/hls/rocev2/CMakeLists.txt b/hls/rocev2/CMakeLists.txt
+index 1828c8b..9aaed2f 100644
+--- a/hls/rocev2/CMakeLists.txt
++++ b/hls/rocev2/CMakeLists.txt
+@@ -44,11 +44,16 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_config.hpp.in ipv4_config.hpp)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../ipv6/ipv6_config.hpp.in ipv6_config.hpp)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../udp/udp_config.hpp.in udp_config.hpp)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rocev2_config.hpp.in rocev2_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -69,7 +74,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/rocev2/make.tcl.in b/hls/rocev2/csim.tcl.in
+similarity index 57%
+rename from hls/rocev2/make.tcl.in
+rename to hls/rocev2/csim.tcl.in
+index 913bbe5..071fb17 100644
+--- a/hls/rocev2/make.tcl.in
++++ b/hls/rocev2/csim.tcl.in
+@@ -1,8 +1,7 @@
+ 
+-open_project ${PROJECT_NAME}_prj
++open_component ${PROJECT_NAME}_prj -flow_target vivado
+ 
+-open_solution "solution1"
+-set_part ${FPGA_PART}
++set_part {xck26-sfvc784-2LV-c}
+ create_clock -period ${CLOCK_PERIOD} -name default
+ set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+ 
+@@ -26,23 +25,8 @@ add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ib_transport.cpp -cflags "-I${CMA
+ 
+ #config_rtl -disable_start_propagation
+ 
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   # csim_design -argv {${CMAKE_CURRENT_SOURCE_DIR}/write_read_read_large_receiver.in ${CMAKE_CURRENT_SOURCE_DIR}/write_read_read_large_receiver.out ${CMAKE_CURRENT_SOURCE_DIR}/rdma_txwriteread.in ${CMAKE_CURRENT_SOURCE_DIR}/rdma_txwriteread.out}
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "rocev2" -display_name "RoCEv2 Endpoint" -description "" -vendor "ethz.systems.fpga" -version "0.82"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip|services> ."
+-}
+ 
++# csim_design -argv {${CMAKE_CURRENT_SOURCE_DIR}/write_read_read_large_receiver.in ${CMAKE_CURRENT_SOURCE_DIR}/write_read_read_large_receiver.out ${CMAKE_CURRENT_SOURCE_DIR}/rdma_txwriteread.in ${CMAKE_CURRENT_SOURCE_DIR}/rdma_txwriteread.out}
++csim_design
+ 
+ exit
+diff --git a/hls/rocev2/ip.tcl.in b/hls/rocev2/ip.tcl.in
+new file mode 100644
+index 0000000..a86899f
+--- /dev/null
++++ b/hls/rocev2/ip.tcl.in
+@@ -0,0 +1,31 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv6/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../udp/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../crc/crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_transport_protocol.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ib_transport.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#config_rtl -disable_start_propagation
++
++
++export_design -format ip_catalog -ipname "rocev2" -display_name "RoCEv2 Endpoint" -description "" -vendor "ethz.systems.fpga" -version "0.82"
++
++exit
+diff --git a/hls/rocev2/services.tcl.in b/hls/rocev2/services.tcl.in
+new file mode 100644
+index 0000000..22dec92
+--- /dev/null
++++ b/hls/rocev2/services.tcl.in
+@@ -0,0 +1,33 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv6/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../udp/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../crc/crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_transport_protocol.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ib_transport.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#config_rtl -disable_start_propagation
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/rocev2/synthesis.tcl.in b/hls/rocev2/synthesis.tcl.in
+new file mode 100644
+index 0000000..714a643
+--- /dev/null
++++ b/hls/rocev2/synthesis.tcl.in
+@@ -0,0 +1,31 @@
++
++open_component ${PROJECT_NAME}_prj -flow_target vivado
++
++set_part {xck26-sfvc784-2LV-c}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv4/ipv4.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ipv6/ipv6.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../udp/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../crc/crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_utils.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../ib_transport_protocol/ib_transport_protocol.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_rocev2.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_ib_transport.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++# add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/test_crc.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#config_rtl -disable_start_propagation
++
++
++csynth_design
++
++exit
+diff --git a/hls/toe/CMakeLists.txt b/hls/toe/CMakeLists.txt
+index 1e6188e..e548a59 100644
+--- a/hls/toe/CMakeLists.txt
++++ b/hls/toe/CMakeLists.txt
+@@ -46,8 +46,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/toe_config.hpp.in toe_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -82,7 +87,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/toe/csim.tcl.in b/hls/toe/csim.tcl.in
+new file mode 100644
+index 0000000..cf53fe2
+--- /dev/null
++++ b/hls/toe/csim.tcl.in
+@@ -0,0 +1,39 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ack_delay/ack_delay.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/close_timer/close_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/event_engine/event_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/port_table/port_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/probe_timer/probe_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/retransmit_timer/retransmit_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_if/rx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_stream_if/rx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_engine/rx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_sar_table/rx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/session_lookup_controller/session_lookup_controller.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/state_table/state_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_if/tx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_stream_if/tx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_engine/tx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_sar_table/tx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_interface/tx_app_interface.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/toe.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/toe_tb.cpp
++
++#config_rtl -disable_start_propagation
++
++csim_design -clean -argv {0 ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/io_fin_5.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rxOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/txOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rx_io_fin_5.gold}
++# csim_design -clean -argv {0 ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/mysyn2.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rxOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/txOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rx_io_fin_5.gold}
++
++exit
+diff --git a/hls/toe/make.tcl.in b/hls/toe/ip.tcl.in
+similarity index 67%
+rename from hls/toe/make.tcl.in
+rename to hls/toe/ip.tcl.in
+index d25e1c4..a287bcb 100644
+--- a/hls/toe/make.tcl.in
++++ b/hls/toe/ip.tcl.in
+@@ -34,23 +34,6 @@ add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/toe_tb.cpp
+ #config_rtl -disable_start_propagation
+ 
+ 
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design -clean -argv {0 ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/io_fin_5.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rxOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/txOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rx_io_fin_5.gold}
+-#   csim_design -clean -argv {0 ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/mysyn2.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rxOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/txOutput.dat ${CMAKE_CURRENT_SOURCE_DIR}/testVectors/rx_io_fin_5.gold}
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "toe" -display_name "10G TCP Offload Engine" -description "TCP Offload Engine supporting 10Gbps line rate, up to 10K concurrent sessions." -vendor "ethz.systems" -version "1.6"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
++export_design -format ip_catalog -ipname "toe" -display_name "10G TCP Offload Engine" -description "TCP Offload Engine supporting 10Gbps line rate, up to 10K concurrent sessions." -vendor "ethz.systems" -version "1.6"
+ 
+ exit
+diff --git a/hls/toe/services.tcl.in b/hls/toe/services.tcl.in
+new file mode 100644
+index 0000000..e75a83b
+--- /dev/null
++++ b/hls/toe/services.tcl.in
+@@ -0,0 +1,41 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ack_delay/ack_delay.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/close_timer/close_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/event_engine/event_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/port_table/port_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/probe_timer/probe_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/retransmit_timer/retransmit_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_if/rx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_stream_if/rx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_engine/rx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_sar_table/rx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/session_lookup_controller/session_lookup_controller.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/state_table/state_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_if/tx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_stream_if/tx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_engine/tx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_sar_table/tx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_interface/tx_app_interface.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/toe.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/toe_tb.cpp
++
++#config_rtl -disable_start_propagation
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/toe/synthesis.tcl.in b/hls/toe/synthesis.tcl.in
+new file mode 100644
+index 0000000..b983737
+--- /dev/null
++++ b/hls/toe/synthesis.tcl.in
+@@ -0,0 +1,39 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/../axi_utils.cpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/ack_delay/ack_delay.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/close_timer/close_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/event_engine/event_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/port_table/port_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/probe_timer/probe_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/retransmit_timer/retransmit_timer.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_if/rx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_app_stream_if/rx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_engine/rx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/rx_sar_table/rx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/session_lookup_controller/session_lookup_controller.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/state_table/state_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_if/tx_app_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_stream_if/tx_app_stream_if.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_engine/tx_engine.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_sar_table/tx_sar_table.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/tx_app_interface/tx_app_interface.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/toe.cpp -cflags "-std=c++11 -I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++add_files -tb ${CMAKE_CURRENT_SOURCE_DIR}/toe_tb.cpp
++
++#config_rtl -disable_start_propagation
++
++
++csynth_design
++
++exit
+diff --git a/hls/udp/CMakeLists.txt b/hls/udp/CMakeLists.txt
+index 00484bd..24a7f5c 100644
+--- a/hls/udp/CMakeLists.txt
++++ b/hls/udp/CMakeLists.txt
+@@ -32,8 +32,13 @@ endif()
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++#Setup HLS custom targets
++set(HLS_TARGETS synthesis csim ip services)
++
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/udp_config.hpp.in udp_config.hpp)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/make.tcl.in make.tcl)
++foreach (target ${HLS_TARGETS})
++   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${target}.tcl.in ${target}.tcl)
++endforeach()
+ 
+ 
+ set(EXAMPLE_HLS_DEPENDS
+@@ -51,7 +56,7 @@ foreach (target ${HLS_TARGETS})
+    endif()
+ 
+    add_custom_target(${target}.${PROJECT_NAME}
+-      COMMAND ${VITIS_HLS_BINARY} -f make.tcl -tclargs ${target}
++      COMMAND ${VITIS_HLS_BINARY} --tcl ${target}.tcl
+       DEPENDS ${EXAMPLE_HLS_DEPENDS})
+    add_dependencies(${target} ${target}.${PROJECT_NAME})
+ endforeach()
+diff --git a/hls/udp/csim.tcl.in b/hls/udp/csim.tcl.in
+new file mode 100644
+index 0000000..4081b59
+--- /dev/null
++++ b/hls/udp/csim.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb test_udp.cpp
++
++
++csim_design
++
++exit
+diff --git a/hls/udp/ip.tcl.in b/hls/udp/ip.tcl.in
+new file mode 100644
+index 0000000..e895359
+--- /dev/null
++++ b/hls/udp/ip.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb test_udp.cpp
++
++
++export_design -format ip_catalog -ipname "udp" -display_name "UDP" -description "" -vendor "ethz.systems.fpga" -version "0.4"
++
++exit
+diff --git a/hls/udp/make.tcl.in b/hls/udp/make.tcl.in
+deleted file mode 100644
+index 2892640..0000000
+--- a/hls/udp/make.tcl.in
++++ /dev/null
+@@ -1,37 +0,0 @@
+-
+-open_project ${PROJECT_NAME}_prj
+-
+-open_solution "solution1"
+-set_part ${FPGA_PART}
+-create_clock -period ${CLOCK_PERIOD} -name default
+-set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
+-
+-set_top ${PROJECT_NAME}_top
+-
+-#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
+-#add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.hpp
+-add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
+-
+-
+-#add_files -tb test_udp.cpp
+-
+-
+-#Check which command
+-set command [lindex $argv 2]
+-
+-if {$command == "synthesis"} {
+-   csynth_design
+-} elseif {$command == "csim"} {
+-   csim_design
+-} elseif {$command == "ip"} {
+-   export_design -format ip_catalog -ipname "udp" -display_name "UDP" -description "" -vendor "ethz.systems.fpga" -version "0.4"
+-} elseif {$command == "services"} {
+-   file mkdir ${IPREPO_DIR}
+-   file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
+-   file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
+-} else {
+-   puts "No valid command specified. Use vitis_hls -f make.tcl <synthesis|csim|ip> ."
+-}
+-
+-
+-exit
+diff --git a/hls/udp/services.tcl.in b/hls/udp/services.tcl.in
+new file mode 100644
+index 0000000..7d4ebd5
+--- /dev/null
++++ b/hls/udp/services.tcl.in
+@@ -0,0 +1,23 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb test_udp.cpp
++
++
++file mkdir ${IPREPO_DIR}
++file delete -force ${IPREPO_DIR}/${PROJECT_NAME}
++file copy -force ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_prj/solution1/impl/ip ${IPREPO_DIR}/${PROJECT_NAME}/
++
++exit
+diff --git a/hls/udp/synthesis.tcl.in b/hls/udp/synthesis.tcl.in
+new file mode 100644
+index 0000000..fed374d
+--- /dev/null
++++ b/hls/udp/synthesis.tcl.in
+@@ -0,0 +1,21 @@
++
++open_project ${PROJECT_NAME}_prj
++
++open_solution "solution1"
++set_part ${FPGA_PART}
++create_clock -period ${CLOCK_PERIOD} -name default
++set_clock_uncertainty ${CLOCK_UNCERTAINTY} default
++
++set_top ${PROJECT_NAME}_top
++
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/../packet.hpp
++#add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.hpp
++add_files ${CMAKE_CURRENT_SOURCE_DIR}/udp.cpp -cflags "-I${CMAKE_CURRENT_BINARY_DIR}"
++
++
++#add_files -tb test_udp.cpp
++
++
++csynth_design
++
++exit
+-- 
+2.43.0
+

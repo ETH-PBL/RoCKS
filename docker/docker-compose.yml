@@ -1,0 +1,12 @@
+services:
+  yocto:
+    image: yocto:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+        PASSWORD: "password"
+        UBUNTU_VERSION: noble-20260610

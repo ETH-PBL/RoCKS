@@ -1,0 +1,43 @@
+From 3a385e555cf5a84d03c20beeb962392f9c1971c8 Mon Sep 17 00:00:00 2001
+From: Michael Jost <michael.jost@pbl.ee.ethz.ch>
+Date: Mon, 1 Jun 2026 08:18:58 +0200
+Subject: [PATCH 3/4] consume but ignore Congestion Notification packets (CNP)
+
+---
+ hls/ib_transport_protocol/ib_transport_protocol.cpp | 7 +++++++
+ hls/ib_transport_protocol/ib_transport_protocol.hpp | 1 +
+ 2 files changed, 8 insertions(+)
+
+diff --git a/hls/ib_transport_protocol/ib_transport_protocol.cpp b/hls/ib_transport_protocol/ib_transport_protocol.cpp
+index 81bfcb5..5c0d7f6 100644
+--- a/hls/ib_transport_protocol/ib_transport_protocol.cpp
++++ b/hls/ib_transport_protocol/ib_transport_protocol.cpp
+@@ -316,6 +316,13 @@ void rx_ibh_fsm(
+                 m_axis_dbg.write(psnPkg(meta.op_code, meta.psn, qpState.epsn, 0));
+             #endif
+ 
++			if (meta.op_code == RC_CNP)
++			{
++				// ignore CNP packets
++				ibhDropMetaFifo.write(fwdPolicy(true, false));
++				fsmState = LOAD;
++				break;
++			}
+ 			if (qpState.epsn == meta.psn || meta.op_code == RC_ACK)
+ 			{
+ 
+diff --git a/hls/ib_transport_protocol/ib_transport_protocol.hpp b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+index e8b4caa..b191c8a 100644
+--- a/hls/ib_transport_protocol/ib_transport_protocol.hpp
++++ b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+@@ -103,6 +103,7 @@ typedef enum {
+ 	RC_RDMA_READ_RESP_LAST = 0x0F,
+ 	RC_RDMA_READ_RESP_ONLY = 0x10,
+ 	RC_ACK = 0x11,
++	RC_CNP = 0x81,
+ } ibOpCode;
+ 
+ bool checkIfResponse(ibOpCode code);
+-- 
+2.43.0
+

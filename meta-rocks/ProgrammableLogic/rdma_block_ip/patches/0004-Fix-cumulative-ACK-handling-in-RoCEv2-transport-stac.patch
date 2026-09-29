@@ -1,0 +1,170 @@
+From da3187310072a1369e6076c25427e0b2cdf7a6a8 Mon Sep 17 00:00:00 2001
+From: Michael Jost <michael.jost@pbl.ee.ethz.ch>
+Date: Mon, 1 Jun 2026 08:34:01 +0200
+Subject: [PATCH 4/4] Fix cumulative ACK handling in RoCEv2 transport stack
+
+---
+ .../ib_transport_protocol.cpp                 | 15 ++++----
+ .../ib_transport_protocol.hpp                 |  7 ++--
+ .../retransmitter/retransmitter.hpp           | 34 +++++++++++++------
+ 3 files changed, 35 insertions(+), 21 deletions(-)
+
+diff --git a/hls/ib_transport_protocol/ib_transport_protocol.cpp b/hls/ib_transport_protocol/ib_transport_protocol.cpp
+index 5c0d7f6..73b6145 100644
+--- a/hls/ib_transport_protocol/ib_transport_protocol.cpp
++++ b/hls/ib_transport_protocol/ib_transport_protocol.cpp
+@@ -308,7 +308,7 @@ void rx_ibh_fsm(
+ 			//TODO also increment oldest outstanding
+ 			//Check if in order
+ 			//TODO Update oldest_oustanding_psn
+-			//TODO this is not working with coalescing ACKs
++			//Fixed: retransmitter UPDATE_1 now loops to release all entries covered by a cumulative ACK
+ 			std::cout << std::hex << "[RX IBH FSM " << INSTID << "]: epsn: " << qpState.epsn << ", packet psn: " << meta.psn << std::endl;
+ 			// For requests we require total order, for responses, there is potential ACK coalescing, see page 299
+ 			// For requests, max_forward == epsn
+@@ -698,9 +698,9 @@ void rx_exh_fsm(
+ 			AckExHeader<WIDTH> ackHeader = exHeader.getAckHeader();
+ 			if(meta.op_code == RC_RDMA_READ_RESP_ONLY || meta.op_code == RC_RDMA_READ_RESP_LAST)
+ 			{
+-				m_axis_rx_ack_meta.write(ackMeta(meta.op_code, meta.dest_qp(15,0), readReqInit.host, 
+-                    readReqInit.host ? readReqInit.laddr(51,48) : 0, readReqInit.host ? readReqInit.laddr(53,52) : 0,
+-                    readReqInit.lst));
++				m_axis_rx_ack_meta.write(ackMeta(meta.op_code, meta.dest_qp(15,0), readReqInit.host,
++				readReqInit.host ? readReqInit.laddr(51,48) : 0, readReqInit.host ? readReqInit.laddr(53,52) : 0,
++				readReqInit.lst, 1));
+ 			}
+ 
+ 			if (ackHeader.isNAK())
+@@ -758,9 +758,9 @@ void rx_exh_fsm(
+ 			// [BTH][AETH]
+ 			AckExHeader<WIDTH> ackHeader = exHeader.getAckHeader();
+ 
+-            m_axis_rx_ack_meta.write(ackMeta(meta.op_code, meta.dest_qp(19,0), readReqInit.host, 
+-                    readReqInit.host ? readReqInit.laddr(51,48) : 0, readReqInit.host ? readReqInit.laddr(53,52) : 0,
+-                    readReqInit.lst));
++			m_axis_rx_ack_meta.write(ackMeta(meta.op_code, meta.dest_qp(19,0), readReqInit.host,
++				readReqInit.host ? readReqInit.laddr(51,48) : 0, readReqInit.host ? readReqInit.laddr(53,52) : 0,
++				readReqInit.lst, readReqInit.count));
+ 
+ 			std::cout << "[RX EXH FSM " << INSTID << "]: syndrome: " << std::hex << ackHeader.getSyndrome() << std::endl;
+ #ifdef RETRANS_EN
+@@ -1461,6 +1461,7 @@ void generate_ibh(
+ 			if (meta.op_code == RC_ACK)
+ 			{
+ 				header.setPsn(qpState.resp_epsn-1); //TODO -1 necessary??
++				header.setAckReq(false);
+ 				std::cout << "[GENERATE IBH " << INSTID << "]: RC_ACK psn " << std::hex << qpState.resp_epsn-1 << std::endl;
+ 			}
+ 			else
+diff --git a/hls/ib_transport_protocol/ib_transport_protocol.hpp b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+index b191c8a..3249ef9 100644
+--- a/hls/ib_transport_protocol/ib_transport_protocol.hpp
++++ b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+@@ -237,7 +237,7 @@ struct txMeta
+ };
+ 
+ /* ACK meta */
+-struct ackMeta 
++struct ackMeta
+ {
+     ibOpCode   op_code; // 32
+ 	ap_uint<16> qpn;
+@@ -245,10 +245,11 @@ struct ackMeta
+     ap_uint<4> dst;
+     ap_uint<2> strm;
+     ap_uint<1> lst;
++    ap_uint<8> count;  // fills padding to 64 bits; consumed by rdma_flow for tail update
+ 
+ 	ackMeta() {}
+-	ackMeta(ibOpCode op_code, ap_uint<16> qpn, ap_uint<1> host, ap_uint<4> dst, ap_uint<2> strm, ap_uint<1> lst)
+-		: op_code(op_code), qpn(qpn), host(host), dst(dst), strm(strm),  lst(lst) {}
++	ackMeta(ibOpCode op_code, ap_uint<16> qpn, ap_uint<1> host, ap_uint<4> dst, ap_uint<2> strm, ap_uint<1> lst, ap_uint<8> count)
++		: op_code(op_code), qpn(qpn), host(host), dst(dst), strm(strm), lst(lst), count(count) {}
+ };
+ 
+ /* Event */
+diff --git a/hls/ib_transport_protocol/retransmitter/retransmitter.hpp b/hls/ib_transport_protocol/retransmitter/retransmitter.hpp
+index 5acc360..3c2fd90 100644
+--- a/hls/ib_transport_protocol/retransmitter/retransmitter.hpp
++++ b/hls/ib_transport_protocol/retransmitter/retransmitter.hpp
+@@ -51,9 +51,10 @@ struct retransRdInit
+     ap_uint<64> laddr;
+     ap_uint<1>  lst;
+     ap_uint<1>  host;
++    ap_uint<16> count;
+     retransRdInit() {}
+-    retransRdInit(ap_uint<64> laddr, ap_uint<1> lst, ap_uint<1> host)
+-        :laddr(laddr), lst(lst), host(host) {}
++    retransRdInit(ap_uint<64> laddr, ap_uint<1> lst, ap_uint<1> host, ap_uint<16> count)
++        :laddr(laddr), lst(lst), host(host), count(count) {}
+ };
+ 
+ struct retransmission
+@@ -312,6 +313,7 @@ void process_retransmissions(
+ 	static retransmission retrans;
+ 	static retransMetaEntry meta; //TODO register needed??
+ 	static retransPointerEntry ptrMeta;
++	static ap_uint<16> rt_count;
+ 
+ 	switch (rt_state)
+ 	{
+@@ -391,6 +393,7 @@ void process_retransmissions(
+ 				// Enquire the first uncleared index (head) in `Retrans Meta Table`
+ 				metaReqFifo.write(retransMetaReq(ptrMeta.head));
+ 				curr = ptrMeta.head;
++				rt_count = 0;
+ 				rt_state = UPDATE_1;
+ 			}
+ 			else
+@@ -413,11 +416,10 @@ void process_retransmissions(
+                 std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 invalid state" << std::endl;
+                 break;
+             } else {
+-                // Address forwarding
+-                if(update.op_code == RC_RDMA_READ_RESP_FIRST || update.op_code == RC_RDMA_READ_RESP_ONLY || update.op_code == RC_ACK) 
++                // Address forwarding for READ responses (count always 1, sent from head entry)
++                if(update.op_code == RC_RDMA_READ_RESP_FIRST || update.op_code == RC_RDMA_READ_RESP_ONLY)
+                 {
+-                    retrans2rx_init.write(retransRdInit(meta.localAddr, meta.lst, meta.host));
+-
++                    retrans2rx_init.write(retransRdInit(meta.localAddr, meta.lst, meta.host, 1));
+                     std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 forwarding local address, laddr " << meta.localAddr << ", last" << meta.lst << std::endl;
+                 }
+ 
+@@ -430,18 +432,28 @@ void process_retransmissions(
+                     meta.psn += 1;
+                     // Update meta table
+                     metaReqFifo.write(retransMetaReq(ptrMeta.head, retransMetaEntry(meta)));
+-
+                     std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 packet update, psn " << meta.psn << ", laddr " << meta.localAddr << ", raddr " << meta.remoteAddr << ", len " << meta.length << std::endl;
+                 } else {
+-                    // Move index
++                    // Move index (RC_ACK, READ_RESP_ONLY, READ_RESP_LAST)
+                     ptrMeta.head = meta.next;
+                     ptrMeta.valid = !meta.isTail;
+-
+-                    // Clear free list
+                     releaseFifo.write(curr);
+                     curr = meta.next;
+ 
+-                    std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 ack update, psn " << meta.psn << std::endl;
++                    if(update.op_code == RC_ACK) {
++                        rt_count++;
++                        if(meta.psn < update.latest_acked_req && !meta.isTail) {
++                            // More entries covered by this cumulative ACK: request next, stay in UPDATE_1
++                            metaReqFifo.write(retransMetaReq(curr));
++                            std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 cumulative ack, released psn " << std::hex << meta.psn << ", count so far " << rt_count << std::endl;
++                            break; // skip pointer update; lock stays held until final iteration
++                        }
++                        // Final entry covered by this ACK: send completion with accumulated count
++                        retrans2rx_init.write(retransRdInit(meta.localAddr, meta.lst, meta.host, rt_count));
++                        std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 ack update done, psn " << std::hex << meta.psn << ", count " << rt_count << std::endl;
++                    } else {
++                        std::cout << "[PROCESS RETRANSMISSION " << INSTID << "]: state UPDATE_1 ack update, psn " << meta.psn << std::endl;
++                    }
+                 }
+             }
+ 
+-- 
+2.43.0
+

@@ -1,0 +1,12 @@
+{
+  "name": "using_axi_lite",
+  "type": "HLS",
+  "configuration": {
+    "componentType": "HLS",
+    "configFiles": [
+      "hls_config.cfg"
+    ],
+    "work_dir": "example"
+  },
+  "template": "vitis_hls_examples/Interface/Register/using_axi_lite"
+}

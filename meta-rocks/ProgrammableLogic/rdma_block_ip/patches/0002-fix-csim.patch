@@ -1,0 +1,25 @@
+From 224f000071d1ad06a1b9f6f80a7ff5864c04e5d6 Mon Sep 17 00:00:00 2001
+From: Michael Jost <michael.jost@pbl.ee.ethz.ch>
+Date: Mon, 1 Jun 2026 08:18:31 +0200
+Subject: [PATCH 2/4] fix csim
+
+---
+ hls/ib_transport_protocol/ib_transport_protocol.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hls/ib_transport_protocol/ib_transport_protocol.hpp b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+index ca8bc08..e8b4caa 100644
+--- a/hls/ib_transport_protocol/ib_transport_protocol.hpp
++++ b/hls/ib_transport_protocol/ib_transport_protocol.hpp
+@@ -37,7 +37,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ using namespace hls;
+ 
+-#define DBG_IBV
++// #define DBG_IBV
+ 
+ const uint32_t BTH_SIZE = 96;
+ const uint32_t RETH_SIZE = 128;
+-- 
+2.43.0
+
