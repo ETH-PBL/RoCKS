@@ -7,6 +7,7 @@ This repository is an *RDMA over Converged Ethernet (RoCEv2)* implementation dep
 [ref2]: https://github.com/fpgasystems/fpga-network-stack "https://github.com/fpgasystems/fpga-network-stack"
 
 ![RoCEv2 on Kria SOM Architecture](doc/architecture.svg)
+
 *Figure 1: RoCEv2 on Kria SOM (RoCKS) architecture*
 
 
