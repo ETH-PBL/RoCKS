@@ -60,11 +60,13 @@ MACHINE=rocks bitbake kria-image-full-cmdline
 
 ## Testing
 
-The test setup consists of the AMD Kria KR260 Starter Kit whose SFP+ interface is connected to a Mellanox ConnectX-6 Lx [[3]][ref3] NIC which is attached to the remote machine (x86_64 running Ubuntu 24.04.5 LTS). The IP addresses of the Kria KR260 are preconfigured, i.e. the RoCEv2 interface is on `192.168.1.20` and the APU network interface on `192.168.1.21`.
+The test setup consists of the AMD Kria KR260 Starter Kit whose SFP+ interface is connected to a Mellanox ConnectX-6 Lx [[3]][ref3] NIC which is attached to the remote machine (x86_64 running Ubuntu 24.04.5 LTS). For the 10 Gbps link a Passive Copper Twinax Cable [[4]][ref4] was used. The IP addresses of the Kria KR260 are preconfigured, i.e. the RoCEv2 interface is on `192.168.1.20` and the APU network interface on `192.168.1.21`.
 
 The Kria KR260 sends 1000 `RDMA WRITE` followed by one `RDMA SEND`. Both, `RDMA WRITE` and `RDMA SEND` have a payload of 2048 bytes.
 
 [ref3]: https://www.nvidia.com/en-in/networking/ethernet/connectx-6-lx/ "https://www.nvidia.com/en-in/networking/ethernet/connectx-6-lx/"
+
+[ref4]: https://www.fs.com/eu-en/products/30856.html?now_cid=3857 "https://www.fs.com/eu-en/products/30856.html?now_cid=3857"
 
 ```ditaa
 +----------------------+                                         +-----------------------------+  
