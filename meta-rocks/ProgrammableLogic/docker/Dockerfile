@@ -76,7 +76,7 @@ RUN apt-get update && apt-get install -y \
 		cmake
 
 RUN apt-get update && \
-		wget http://mirrors.kernel.org/ubuntu/pool/main/libi/libidn/libidn11_1.33-2.2ubuntu2_amd64.deb && \
+		wget https://old-releases.ubuntu.com/ubuntu/pool/main/libi/libidn/libidn11_1.33-2.2ubuntu2_amd64.deb && \
 		apt install ./libidn11_1.33-2.2ubuntu2_amd64.deb
 
 RUN apt-get install -y \
