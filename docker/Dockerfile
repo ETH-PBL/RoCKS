@@ -72,15 +72,6 @@ RUN apt-get update && apt-get install -y \
 		libncurses5-dev \
 		libusb-dev
 
-# downgrade to tar 1.34
-# (see here https://adaptivesupport.amd.com/s/question/0D5Pd00001ChOsUKAV/20252-dopackage-fails-with-wrong-path?language=zh_CN)
-RUN wget https://ftp.gnu.org/gnu/tar/tar-1.34.tar.gz && \
-	tar -xzf tar-1.34.tar.gz && \
-	cd tar-1.34 && \
-	./configure FORCE_UNSAFE_CONFIGURE=1 && \
-	make && \
-	rm -rf tar-1.34
-
 RUN apt-get install -y \
 	 	# libboost-signals-dev \
 	 	google-perftools \
